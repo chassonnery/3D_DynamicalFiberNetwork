@@ -1,0 +1,39 @@
+#PARAMETERS OF THE 2 SPECIES REPULSION MODEL
+#-------------- AGENT PARAMETERS ----------------------------------------------------------------------
+0		! Ncell (initial number of cells)
+0		! Nmax (maximal number of cells)
+0.1		! Rmin (minimal cells radius)
+1.5		! Rmax (maximal cells radius)
+1500	! Nfib (number of fibers)
+6		! Lf (fiber length)
+0.5		! Rf (fiber radius)
+#-------------- INTERACTION PARAMETERS ----------------------------------------------------------------
+0.0		! alpha_repCC (intensity of the cell-cell repuslion force)
+0.0		! alpha_repCF (intensity of the cell-fiber repuslion force)
+12.5	! alpha_repFF (intensity of the fiber-fiber repuslion force)
+2.0		! alpha_align (intensity of the linked fiber alignment torque)
+5.0		! alpha_rappel (intensity of the linked fiber elastic spring)
+0		! disable repulsion between linked fibers : 0 no, 1 yes
+#-------------- CELL DIFFERENTIATION/GROWTH -----------------------------------------------------------
+0.0		! nu_ens (frequency of the cell insemination process)
+0.0		! Kgrowth (volumic growth rate of the cells)
+#-------------- LINKING/UNLINKING ---------------------------------------------------------------------
+0.1		! nu_link   (frequency of the fiber linking process)
+0.025	! nu_unlink (frequency of the fiber unlinking process)
+0		! linking dynamics : 0 dynamical, 1 fixed at initialization, 2 no links
+0.0		! eps_link = d_link_max -  d_link_eq (perception distance for link creation)
+1.0		! d_link_eq (link equilibrium length)
+#-------------- DOMAIN PARAMETERS AND BOUNDARY CONDITIONS ---------------------------------------------
+15		! Lx (side length of the cuboid domain in direction x)
+15		! Ly (side length of the cuboid domain in direction y)
+15		! Lz (side length of the cuboid domain in direction z)
+0.5		! DirFillingRate (fiber density in the dirichlet layer)
+0 0 0 0 0 0		! Boundary condition on each border (-x,+x,-y,+y,-z,+z) : 0 periodic, 1 Dirichlet
+#-------------- NUMERICAL PARAMETERS ------------------------------------------------------------------
+50000	! Tf (Total time of simulation)
+0.1		! maximal time-step
+# ------------- INITIALIZATION ------------------------------------------------------------------------
+0		! InitType : 0 automatic initialization, 1 initialization from input files, 2 relaunch from end of previous simulation
+#-------------- SAVE DATA -----------------------------------------------------------------------------
+100		! period for data saving
+'test'  ! folder name for the data (current date and time will be added automatically at the end)
