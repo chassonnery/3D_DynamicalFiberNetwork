@@ -4,6 +4,10 @@ This repository contains the supplementary data, code and materials of the paper
 
 Folder **Code** contains the code (written in Fortran90) used to perform numerical simulations of our model.
 
+Folder **Postprocess** contains :
+  - the code (written in Fortran90) used to perform a statistical analysis of the simulations;
+  - the script (in the form of a Jupyter Notebook) used to generate the graphics presented in the article. 
+
 Folder **Supplementary data - Movies** contains movies showing the results of some of our simulations.
 
 # License
