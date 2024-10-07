@@ -11,12 +11,12 @@ use definitions
 	TYPE(ParametersSim), intent(out)  :: Psim
 	TYPE(ParametersDom), intent(out)  :: Pdom
 	TYPE(ParametersMod), intent(out)  :: Pmod
-	character(80), intent(in)         :: filename
+	character(*), intent(in)          :: filename
 	character(8)                      :: temp
 	Double Precision, PARAMETER       :: pi = 3.14159265358979323846
 
 	! Read file parameters.txt ------------------------------------------------
-	open(unit=15,file=filename,status='old',action='read')
+	open(unit=15,file=trim(adjustl(filename)),status='old',action='read')
 	read(15,*) temp
 	read(15,*) temp
 	read(15,*) Pmod%Ncell

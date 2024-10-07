@@ -1,8 +1,8 @@
 program main
 
 use definitions
-use lecture_ecriture
 use fonctions
+use lecture_ecriture
 use jacobi
 use omp_lib
 
