@@ -1,8 +1,8 @@
 program main
 
 use definitions
-use lecture_ecriture
 use fonctions
+use lecture_ecriture
 use omp_lib
 
 implicit none
@@ -39,8 +39,9 @@ integer(kind=4)                               :: timevalues(8)
 
 
 
-call omp_set_num_threads(10)
+call omp_set_num_threads(20)
 tcpuglob0 = omp_get_wtime()
+tcpu_write = 0
 !------------------------------------------------------------------------------------------------------------------
 !---------------------------- INITIALISATION ----------------------------------------------------------------------
 !------------------------------------------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ tcpuglob0 = omp_get_wtime()
 call init_random_seed(0) ! 0 for a random run and 1 for a repeatable run
 
 ! Lecture des paramètres
-call LectureParam(Pmod,Psim,Pdom)
+call LectureParam(Pmod,Psim,Pdom,"PARAMETERS.txt")
 
 
 
@@ -424,7 +425,9 @@ do while (time<=Psim%Tf)
 	
 !------------------------------- SAVE CURRENT STATE TO RAM --------------------------------------------
 	if (time.ge.(Nsavestep + Nsaveblock*Nmemorymax)*Psim%Tenr) then
-!		call SaveCurrentState(Saving,Xcell,Rcell,Xfib,omega,link,distpoints,Pmod)
+		tcpuf = omp_get_wtime() - tcpu0
+		tcpu0 = omp_get_wtime()
+		
 		do i = 1,Pmod%Ncell
 			Saving%CellState(Nsavestep,i,:) = (/ Xcell(i,:), Rcell(i) /)
 		end do
@@ -445,13 +448,13 @@ do while (time<=Psim%Tf)
 		
 		Nlinks_int = sum(link(:,1:Pmod%Nfib))/2.0
 		Nlinks_ext = sum(link(:,Pmod%Nfib+1:))
-		tcpuf = omp_get_wtime()
-		Saving%VariousReal(Nsavestep,:) = (/time, tcpuf - tcpu0 /)
+		Saving%VariousReal(Nsavestep,:) = (/time, tcpuf /)
 		Saving%VariousInt(Nsavestep,:) = (/ Nlinks_int, Nlinks_ext, Pmod%Ncell, Nbetween /)
 
-		tcpu0 = omp_get_wtime()
 		Nsavestep = Nsavestep + 1
-		Nbetween = 0
+		Nbetween = 0	
+		tcpu_write = tcpu_write + omp_get_wtime() - tcpu0
+		tcpu0 = omp_get_wtime()
 	endif
 	
 	
@@ -475,6 +478,8 @@ do while (time<=Psim%Tf)
 		Saving%LinkState(:,:,:) = 0
 		Saving%VariousReal(:,:) = 0
 		Saving%VariousInt(:,:)  = 0
+		tcpu_write = tcpu_write + omp_get_wtime() - tcpu0
+		tcpu0 = omp_get_wtime()
 	end if
 	
 	
@@ -628,12 +633,11 @@ open(101,file=trim(adjustl(Psim%nomdossier))//'/Quantif.dat',action='write',posi
 do i = Nsavestep0,Nsavestep-1,1
 	write(101,5000) Saving%VariousReal(i,:), Saving%VariousInt(i,:)
 end do
-tcpu_write  = omp_get_wtime()
 write(101,*)
 write(101,*)
 write(101,*) "# Total time of computation : ",tcpu_days," days, ",tcpu_hours," hours and ",tcpu_secs," seconds."
 write(101,*) "# Total time of computation (in seconds) : ",tcpuglobf - tcpuglob0
-write(101,*) "# Time needed to write data (in seconds) : ",tcpu_write - tcpuglobf
+write(101,*) "# Time needed to write data (in seconds) : ",tcpu_write + omp_get_wtime() - tcpuglobf
 write(101,*) "# Internal time of the simulation at the end of the insemination proccess : ",t_end_ins
 close(101)
 

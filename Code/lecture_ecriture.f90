@@ -2,22 +2,21 @@ module lecture_ecriture
 
 implicit none
 
-save
-
 contains
 
-subroutine LectureParam(Pmod,Psim,Pdom)
+subroutine LectureParam(Pmod,Psim,Pdom,filename)
 !- Read the parameters for the simulation from the file PARAMETERS.txt
 use definitions
 	implicit none
 	TYPE(ParametersSim), intent(out)  :: Psim
 	TYPE(ParametersDom), intent(out)  :: Pdom
 	TYPE(ParametersMod), intent(out)  :: Pmod
+	character(*), intent(in)          :: filename
 	character(8)                      :: temp
 	Double Precision, PARAMETER       :: pi = 3.14159265358979323846
 
 	! Read file parameters.txt ------------------------------------------------
-	open(unit=15,file='PARAMETERS.txt',status='old',action='read')
+	open(unit=15,file=trim(adjustl(filename)),status='old',action='read')
 	read(15,*) temp
 	read(15,*) temp
 	read(15,*) Pmod%Ncell
@@ -141,7 +140,7 @@ use fonctions
 	integer :: i,k,ios
 	double precision :: lik,lki
 	
-	! Read cells' data
+	! Read cells data
 	if (Pmod%Ncell.ne.0) then
 		open(unit=15,file='INPUTCELLS.dat',status='old',action='read')
 		do i=1,Pmod%Ncell
@@ -150,7 +149,7 @@ use fonctions
 		close(unit=15)
 	end if
 	
-	! Read system fibers' data
+	! Read system fibers data
 	if (Pmod%Nfib.ne.0) then
 		open(unit=15,file='INPUTFIBERS.dat',status='old',action='read')
 		do i=1,Pmod%Nfib
@@ -159,7 +158,7 @@ use fonctions
 		close(unit=15)
 	end if
 	
-	! Read dirichlet-fibers' data
+	! Read dirichlet-fibers data
 	if (Pmod%Ndirtot.ne.0) then
 		open(unit=15,file='INPUTDIRICHLET.dat',status='old',action='read')
 		do i=Pmod%Nfib+1,Pmod%Nfib+Pmod%Ndirtot
@@ -168,7 +167,7 @@ use fonctions
 		close(unit=15)
 	end if
 	
-	! Read links' data
+	! Read links data
 	link = 0
 	distpoints = 0.0
 	if (Pmod%LinkType.ne.2) then
@@ -227,7 +226,7 @@ use fonctions
 	write(ch_iter,*) NbStepInPreviousSim
 	
 	
-	! Read cells' data
+	! Read cells data
 	Pmod%Ncell = 0
 	if (access(trim(adjustl(nomdossier_old))//'/cells'//trim(adjustl(ch_iter))//'.dat', ' ' ) .eq. 0) then ! check if the file exists
 		open(unit=15,file=trim(adjustl(nomdossier_old))//'/cells'//trim(adjustl(ch_iter))//'.dat',status='old',action='read')
@@ -243,7 +242,7 @@ use fonctions
 		close(unit=15)
 	end if
 	
-	! Read system fibers' data
+	! Read system fibers data
 	if (Pmod%Nfib.ne.0) then
 		open(unit=15,file=trim(adjustl(nomdossier_old))//'/fibers'//trim(adjustl(ch_iter))//'.dat',status='old',action='read')
 		do i=1,Pmod%Nfib
@@ -252,7 +251,7 @@ use fonctions
 		close(unit=15)
 	end if
 	
-	! Read dirichlet-fibers' data
+	! Read dirichlet-fibers data
 	if (Pmod%Ndirtot.ne.0) then
 		open(unit=15,file=trim(adjustl(nomdossier_old))//'/dirichlet_layer.dat',status='old',action='read')
 		do i=Pmod%Nfib+1,Pmod%Nfib+Pmod%Ndirtot
@@ -261,7 +260,7 @@ use fonctions
 		close(unit=15)
 	end if
 
-	! Read links' data
+	! Read links data
 	link = 0
 	distpoints = 0.0
 	if (Pmod%LinkType.eq.0) then
