@@ -1,7 +1,8 @@
 The Fortran files can be compilated into a executable file **analysis.exe** using the command line :  
-> `gfortan definitions.f90 fonctions.f90 lecture_ecriture.f90 jacobi.f90 analysis.f90 -o src.exe`
+> `gfortan definitions.f90 fonctions.f90 lecture_ecriture.f90 jacobi.f90 analysis.f90 -o analysis.exe`
+
 or 
-> `gfortan definitions.f90 fonctions.f90 lecture_ecriture.f90 jacobi.f90 analysis_10runs.f90 -o src.exe`
+> `gfortan definitions.f90 fonctions.f90 lecture_ecriture.f90 jacobi.f90 analysis_10runs.f90 -o analysis.exe`
 
 The first alternative will ask the user to enter the path to a folder containing the result of *one simulation*. It will then compute the alignment rate, number of links and number of neighbours of each fiber at each time-step, as well as the average of these quantifiers over all fibers at each time-step.
 
